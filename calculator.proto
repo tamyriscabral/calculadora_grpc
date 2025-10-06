@@ -1,1 +1,39 @@
+syntax = "proto3";
+
+// Define o pacote para evitar colisões de nomes
+package calculator;
+
+// A mensagem de requisição que o cliente envia.
+// Contém a operação desejada e a lista de números.
+message CalculationRequest {
+    // Enum para definir as operações válidas
+    enum Operation {
+        INVALID = 0; // Padrão deve ser 0
+        SUM = 1;
+        SUBTRACT = 2;
+        MULTIPLY = 3;
+        DIVIDE = 4;
+    }
+
+    Operation operation = 1;
+
+    // Lista de números. O 'repeated' significa que é uma lista ou array.
+    // O limite de 20 números será imposto na lógica do servidor/cliente.
+    repeated double numbers = 2;
+}
+
+// A mensagem de resposta que o servidor envia de volta.
+message CalculationResponse {
+    // Campo para o resultado (em caso de sucesso)
+    optional double result = 1; 
+
+    // Campo para mensagens de erro (em caso de falha)
+    optional string error_message = 2;
+}
+
+// Definição do serviço da calculadora.
+service CalculatorService {
+    // Um método simples (Unary RPC) que recebe uma requisição e retorna uma resposta
+    rpc Calculate (CalculationRequest) returns (CalculationResponse);
+}
 
